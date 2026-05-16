@@ -3,106 +3,115 @@
 
 using namespace std;
 
-struct Nodo {
-
+class Alumno {
+private:
     string nombres;
     string apellidos;
     string carnet;
     string email;
     string telefono;
-
     float notas[5];
 
+public:
+    void ingresarDatos() {
+        cin.ignore();
+
+        cout << "\nIngrese nombres: ";
+        getline(cin, nombres);
+
+        cout << "Ingrese apellidos: ";
+        getline(cin, apellidos);
+
+        cout << "Ingrese carnet: ";
+        getline(cin, carnet);
+
+        cout << "Ingrese email: ";
+        getline(cin, email);
+
+        cout << "Ingrese telefono: ";
+        getline(cin, telefono);
+
+        cout << "\nIngrese las 5 notas:\n";
+
+        for (int i = 0; i < 5; i++) {
+            do {
+                cout << "Nota " << i + 1 << " (0 a 10): ";
+                cin >> notas[i];
+
+                if (notas[i] < 0 || notas[i] > 10) {
+                    cout << "Error: la nota debe estar entre 0 y 10.\n";
+                }
+
+            } while (notas[i] < 0 || notas[i] > 10);
+        }
+    }
+
+    float calcularPromedio() {
+        float suma = 0;
+
+        for (int i = 0; i < 5; i++) {
+            suma += notas[i];
+        }
+
+        return suma / 5;
+    }
+
+    void mostrarDatos() {
+        cout << "\nNombres   : " << nombres << endl;
+        cout << "Apellidos : " << apellidos << endl;
+        cout << "Carnet    : " << carnet << endl;
+        cout << "Email     : " << email << endl;
+        cout << "Telefono  : " << telefono << endl;
+
+        cout << "Notas     : ";
+
+        for (int i = 0; i < 5; i++) {
+            cout << notas[i] << " ";
+        }
+
+        cout << "\nPromedio  : " << calcularPromedio() << endl;
+    }
+};
+
+struct Nodo {
+    Alumno alumno;
     Nodo* siguiente;
 };
 
 int main() {
-
     Nodo* inicio = NULL;
     Nodo* fin = NULL;
 
     char opcion;
 
     do {
-
-        cout << "\nDesea ingresar un nuevo alumno? (S/N): ";
+        cout << "\nDesea agregar un alumno? (S/N): ";
         cin >> opcion;
 
-        cin.ignore();
-
         if (opcion == 'S' || opcion == 's') {
-
             Nodo* nuevoNodo = new Nodo;
 
-            cout << "\nIngrese nombres: ";
-            getline(cin, nuevoNodo->nombres);
-
-            cout << "Ingrese apellidos: ";
-            getline(cin, nuevoNodo->apellidos);
-
-            cout << "Ingrese carnet: ";
-            getline(cin, nuevoNodo->carnet);
-
-            cout << "Ingrese email: ";
-            getline(cin, nuevoNodo->email);
-
-            cout << "Ingrese telefono: ";
-            getline(cin, nuevoNodo->telefono);
-
-            cout << "\nIngrese las 5 notas:\n";
-
-            for (int i = 0; i < 5; i++) {
-
-                cout << "Nota " << i + 1 << ": ";
-                cin >> nuevoNodo->notas[i];
-            }
-
+            nuevoNodo->alumno.ingresarDatos();
             nuevoNodo->siguiente = NULL;
 
             if (inicio == NULL) {
-
                 inicio = nuevoNodo;
                 fin = nuevoNodo;
-
             } else {
-
                 fin->siguiente = nuevoNodo;
                 fin = nuevoNodo;
             }
-
-            cin.ignore();
         }
 
     } while (opcion == 'S' || opcion == 's');
 
-    cout << "\n=========== LISTA DE ALUMNOS ===========\n";
+    cout << "\n========== LISTA DE ALUMNOS ==========\n";
 
     Nodo* actual = inicio;
 
     while (actual != NULL) {
-
-        cout << "\n----------------------------------\n";
-
-        cout << "Nombres   : " << actual->nombres << endl;
-        cout << "Apellidos : " << actual->apellidos << endl;
-        cout << "Carnet    : " << actual->carnet << endl;
-        cout << "Email     : " << actual->email << endl;
-        cout << "Telefono  : " << actual->telefono << endl;
-
-        cout << "Notas     : ";
-
-        float suma = 0;
-
-        for (int i = 0; i < 5; i++) {
-
-            cout << actual->notas[i] << " ";
-
-            suma += actual->notas[i];
-        }
-
-        float promedio = suma / 5;
-
-        cout << "\nPromedio  : " << promedio << endl;
+        cout << "\n--------------------------------------\n";
+        actual->alumno.mostrarDatos();
 
         actual = actual->siguiente;
     }
@@ -110,11 +119,8 @@ int main() {
     actual = inicio;
 
     while (actual != NULL) {
-
         Nodo* auxiliar = actual;
-
         actual = actual->siguiente;
-
         delete auxiliar;
     }
 
